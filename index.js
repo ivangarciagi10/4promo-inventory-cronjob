@@ -37,6 +37,7 @@ async function getProductByHandle(handle) {
 }
 
 async function updateInventory(input) {
+    //Usa esta mutation porque Shopify no permite actualizar inventario por productVariantsBulkUpdate
     const response = await axios.post(
         'https://gi-hh-global.myshopify.com/admin/api/2024-07/graphql.json',
         JSON.stringify({
@@ -92,13 +93,13 @@ async function updateProducts() {
                     if (variant.inventoryQuantity !== product.inventario) { //Actualiza la variante si el inventario ha cambiado
                         const variantToUpdate = {
                             quantities: {
-                                inventoryItemId: variant.inventoryItem.id,
+                                inventoryItemId: variant.inventoryItem.id, //Usa id de inventario porque usar id de variante o producto no funciona
                                 locationId: 'gid://shopify/Location/69743050958',
                                 quantity: product.inventario,
                             },
                             name: "available",
                             reason: "correction",
-                            ignoreCompareQuantity: true, //Considerar seguir el comportammiento de compare que ofrece Shopify
+                            ignoreCompareQuantity: true, //Desactiva la comparación de inventario para siempre sobreescribir con la info de 4Promo
                         };
                         const response = await updateInventory(variantToUpdate);
                         console.log('Inventario actualizado:', response.changes);
