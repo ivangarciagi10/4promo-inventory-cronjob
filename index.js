@@ -1,4 +1,5 @@
 const axios = require('axios');
+require('dotenv').config();
 
 async function get4PromoProducts() {
     const response = await axios.get('https://4promotional.net:9090/WsEstrategia/inventario');
@@ -28,7 +29,7 @@ async function getProductByHandle(handle) {
         }), {
             headers: {
                 'Content-Type': 'application/json',
-                'X-Shopify-Access-Token': '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',
+                'X-Shopify-Access-Token': process.env.SHOPIFY_TOKEN,
             }
         }
     );
@@ -63,7 +64,7 @@ async function updateInventory(input) {
         }), {
             headers: {
                 'Content-Type': 'application/json',
-                'X-Shopify-Access-Token': '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',
+                'X-Shopify-Access-Token': process.env.SHOPIFY_TOKEN,
             }
         }
     );
