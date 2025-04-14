@@ -3,7 +3,7 @@ name: Update Products Cronjob
 # This schedule uses cron syntax to run every 10 minutes.
 on:
   schedule:
-    - cron: "*/10 * * * *"  # Adjust the schedule according to your needs.
+    - cron: "0 */4 * * *"  # Triggers every 4 hours at minute 0.
   workflow_dispatch:     # Enables manual run if needed.
 
 jobs:
