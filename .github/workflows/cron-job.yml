@@ -1,0 +1,28 @@
+name: Update Products Cronjob
+
+# This schedule uses cron syntax to run every 10 minutes.
+on:
+  schedule:
+    - cron: "*/10 * * * *"  # Adjust the schedule according to your needs.
+  workflow_dispatch:     # Enables manual run if needed.
+
+jobs:
+  update_products:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Or any version you prefer
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run updateProducts Script
+        env:
+          SHOPIFY_TOKEN: ${{ secrets.SHOPIFY_TOKEN }}
+        run: node index.js  # Replace with the actual file name of your script
