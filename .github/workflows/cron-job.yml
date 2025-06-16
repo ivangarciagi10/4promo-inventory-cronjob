@@ -25,4 +25,6 @@ jobs:
       - name: Run updateProducts Script
         env:
           SHOPIFY_TOKEN: ${{ secrets.SHOPIFY_TOKEN }}
+          USER_PO: ${{ secrets.USER_PO }}
+          PASSWORD_PO: ${{ secrets.PASSWORD_PO }}
         run: node index.js  # Replace with the actual file name of your script
