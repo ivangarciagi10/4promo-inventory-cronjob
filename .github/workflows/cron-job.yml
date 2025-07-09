@@ -1,6 +1,6 @@
-name: Update Products Cronjob
+name: Update Products Cronjob - Multi Tienda
 
-# This schedule uses cron syntax to run every 10 minutes.
+# This schedule uses cron syntax to run every 4 hours.
 on:
   schedule:
     - cron: "0 */4 * * *"  # Triggers every 4 hours at minute 0.
@@ -12,17 +12,22 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'  # Or any version you prefer
+          node-version: '18'
 
       - name: Install Dependencies
         run: npm install
 
-      - name: Run updateProducts Script
+      - name: Run Multi-Store Sync
         env:
-          SHOPIFY_TOKEN: ${{ secrets.SHOPIFY_TOKEN }}
-        run: node index.js  # Replace with the actual file name of your script
+          # Variables para HH Global
+          SHOPIFY_TOKEN_HHGLOBAL: ${{ secrets.SHOPIFY_TOKEN_HHGLOBAL }}
+          GRAPHQL_URL_HHGLOBAL: ${{ secrets.GRAPHQL_URL_HHGLOBAL }}
+          # Variables para GNP
+          SHOPIFY_TOKEN_GNP: ${{ secrets.SHOPIFY_TOKEN_GNP }}
+          GRAPHQL_URL_GNP: ${{ secrets.GRAPHQL_URL_GNP }}
+        run: npm start
