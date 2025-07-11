@@ -3,7 +3,7 @@ name: Update Products Cronjob - Multi Tienda
 # This schedule uses cron syntax to run every 4 hours.
 on:
   schedule:
-    - cron: "0 */4 * * *"  # Triggers every 4 hours at minute 0.
+    - cron: "*/30 * * * *"  # Triggers every 30 minutes.
   workflow_dispatch:     # Enables manual run if needed.
 
 jobs:
