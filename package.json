@@ -6,6 +6,9 @@
     "start": "node index.js",
     "sync": "node index.js",
     "get-locations": "node get-location-id.js",
+    "debug": "node debug-product.js",
+    "analyze": "node analyze-4promo.js",
+    "compare": "node compare-stores.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": ["shopify", "inventory", "cronjob", "4promo"],
