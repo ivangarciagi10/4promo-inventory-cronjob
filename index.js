@@ -14,6 +14,12 @@ const STORES = {
         token: process.env.SHOPIFY_TOKEN_GNP,
         graphqlUrl: process.env.GRAPHQL_URL_GNP,
         locationId: 'gid://shopify/Location/73808511078' // Necesitarás actualizar este ID para GNP
+    },
+    PSP: {
+        name: 'PSP',
+        token: process.env.SHOPIFY_TOKEN_PSP,
+        graphqlUrl: process.env.GRAPHQL_URL_PSP,
+        locationId: 'gid://shopify/Location/81652908273' // Necesitarás actualizar este ID para PSP
     }
 };
 
@@ -66,7 +72,7 @@ async function getProductByHandle(handle, storeConfig) {
             console.log(`⚠️ [${storeConfig.name}] Producto no encontrado para handle: ${handle}`);
             return null;
         }
-        
+
         return product;
     } catch (error) {
         console.error(`❌ [${storeConfig.name}] Error obteniendo producto ${handle}:`, error.message);
@@ -107,7 +113,7 @@ async function updateInventory(input, storeConfig) {
         );
 
         const result = response.data.data.inventorySetQuantities;
-        
+
         if (result.userErrors && result.userErrors.length > 0) {
             console.error(`❌ [${storeConfig.name}] Errores en actualización de inventario:`, result.userErrors);
             return null;
@@ -123,7 +129,7 @@ async function updateInventory(input, storeConfig) {
 //Tiempo de ejecución aproximada: 10 minutos por tienda
 async function updateProductsForStore(storeKey, storeConfig) {
     console.log(`\n🔄 Iniciando sincronización para ${storeConfig.name}...`);
-    
+
     const products = await get4PromoProducts();
     console.log(`📊 Total de productos de 4Promo a procesar: ${products.length}`);
 
@@ -135,7 +141,7 @@ async function updateProductsForStore(storeKey, storeConfig) {
     let noMatchCount = 0;
     let noInventoryCount = 0;
     let processedProducts = new Set();
-    
+
     for (const product of products) {
         try {
             // Validar que el producto tenga inventario válido
@@ -146,11 +152,11 @@ async function updateProductsForStore(storeKey, storeConfig) {
             }
 
             const handle = product.nombre_articulo.toLowerCase().replace(/\s+/g, '-') + '-' + product.id_articulo.toLowerCase().replace(/\s+/g, '-');
-            
+
             // Log cada producto que se está procesando
             console.log(`\n🔍 [${storeConfig.name}] Procesando: ${product.nombre_articulo} (${product.id_articulo}) - Color: ${product.color} - Inventario: ${product.inventario}`);
             console.log(`   Handle generado: ${handle}`);
-            
+
             if (handle !== previousHandle) {
                 shopifyProduct = await getProductByHandle(handle, storeConfig);
                 if (shopifyProduct) {
@@ -164,27 +170,27 @@ async function updateProductsForStore(storeKey, storeConfig) {
                 }
                 previousHandle = handle;
             }
-            
+
             // Verificar que shopifyProduct no sea null antes de continuar
             if (!shopifyProduct) {
                 console.log(`⚠️ [${storeConfig.name}] No hay producto de Shopify para procesar`);
                 continue;
             }
-            
+
             const productVariants = shopifyProduct.variants.nodes;
             let variantFound = false;
-            
+
             for (const variant of productVariants) {
                 console.log(`   🔍 Comparando variante: "${variant.title}" con color: "${product.color}"`);
-                
+
                 if (variant.title === product.color) {
                     variantFound = true;
                     console.log(`✅ [${storeConfig.name}] Variante encontrada: ${variant.title}`);
                     console.log(`   Inventario actual: ${variant.inventoryQuantity} | Nuevo inventario: ${product.inventario}`);
-                    
+
                     if (variant.inventoryQuantity !== product.inventario) {
                         console.log(`🔄 [${storeConfig.name}] Actualizando inventario...`);
-                        
+
                         const variantToUpdate = {
                             quantities: {
                                 inventoryItemId: variant.inventoryItem.id,
@@ -195,7 +201,7 @@ async function updateProductsForStore(storeKey, storeConfig) {
                             reason: "correction",
                             ignoreCompareQuantity: true,
                         };
-                        
+
                         const response = await updateInventory(variantToUpdate, storeConfig);
                         if (response) {
                             console.log(`✅ [${storeConfig.name}] Inventario actualizado exitosamente:`, response.changes);
@@ -210,20 +216,20 @@ async function updateProductsForStore(storeKey, storeConfig) {
                     break;
                 }
             }
-            
+
             if (!variantFound) {
                 console.log(`❌ [${storeConfig.name}] No se encontró variante que coincida con el color: ${product.color}`);
                 noMatchCount++;
             }
-            
+
             processedProducts.add(`${product.nombre_articulo}-${product.id_articulo}-${product.color}`);
-            
+
         } catch (error) {
             console.error(`❌ [${storeConfig.name}] Error procesando el producto ${product.nombre_articulo} ${product.id_articulo}:`, error.message);
             errorCount++;
         }
     }
-    
+
     console.log(`\n📊 [${storeConfig.name}] Resumen de sincronización:`);
     console.log(`   - Productos procesados: ${processedProducts.size}`);
     console.log(`   - Productos actualizados: ${updatedCount}`);
@@ -235,9 +241,9 @@ async function updateProductsForStore(storeKey, storeConfig) {
 
 async function updateAllStores() {
     console.log('🚀 Iniciando sincronización multi tienda...');
-    
+
     const startTime = Date.now();
-    
+
     // Ejecutar sincronización para cada tienda
     for (const [storeKey, storeConfig] of Object.entries(STORES)) {
         try {
@@ -246,10 +252,10 @@ async function updateAllStores() {
             console.error(`❌ Error crítico en la sincronización de ${storeConfig.name}:`, error.message);
         }
     }
-    
+
     const endTime = Date.now();
     const duration = Math.round((endTime - startTime) / 1000);
-    
+
     console.log(`\n🎉 Sincronización multi tienda completada en ${duration} segundos`);
 }
 

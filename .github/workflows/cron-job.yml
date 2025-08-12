@@ -24,10 +24,10 @@ jobs:
 
       - name: Run Multi-Store Sync
         env:
-          # Variables para HH Global
           SHOPIFY_TOKEN_HHGLOBAL: ${{ secrets.SHOPIFY_TOKEN_HHGLOBAL }}
           GRAPHQL_URL_HHGLOBAL: ${{ secrets.GRAPHQL_URL_HHGLOBAL }}
-          # Variables para GNP
           SHOPIFY_TOKEN_GNP: ${{ secrets.SHOPIFY_TOKEN_GNP }}
           GRAPHQL_URL_GNP: ${{ secrets.GRAPHQL_URL_GNP }}
+          SHOPIFY_TOKEN_PSP: ${{ secrets.SHOPIFY_TOKEN_PSP }}
+          GRAPHQL_URL_PSP: ${{ secrets.GRAPHQL_URL_PSP }}
         run: npm start

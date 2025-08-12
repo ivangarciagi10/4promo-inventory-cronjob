@@ -31,7 +31,7 @@ async function getLocationId(storeName, token, graphqlUrl) {
 
         const locations = response.data.data.locations.nodes;
         console.log(`\n📍 Ubicaciones disponibles en ${storeName}:`);
-        
+
         locations.forEach((location, index) => {
             console.log(`${index + 1}. ${location.name}`);
             console.log(`   ID: ${location.id}`);
@@ -65,7 +65,13 @@ async function main() {
         process.env.GRAPHQL_URL_GNP
     );
 
+    await getLocationId(
+        'PSP',
+        process.env.SHOPIFY_TOKEN_PSP,
+        process.env.GRAPHQL_URL_PSP
+    );
+
     console.log('💡 Copia el ID de la ubicación principal de cada tienda y actualiza el locationId en index.js');
 }
 
-main().catch(console.error); 
+main().catch(console.error);
