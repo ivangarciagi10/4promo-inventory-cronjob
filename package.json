@@ -3,18 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "sync": "node index.js",
-    "get-locations": "node get-location-id.js",
-    "debug": "node debug-product.js",
-    "analyze": "node analyze-4promo.js",
-    "compare": "node compare-stores.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["shopify", "inventory", "cronjob", "4promo"],
+  "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "Cronjob multi tienda para sincronizar inventario desde 4Promo hacia Shopify",
+  "description": "",
   "dependencies": {
     "axios": "^1.8.4",
     "dotenv": "^16.5.0"
