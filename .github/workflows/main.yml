@@ -23,6 +23,5 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: "24" }
       - run: npm install
-
       - name: Run update
         run: node index.js
