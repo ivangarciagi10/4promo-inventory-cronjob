@@ -17,6 +17,7 @@ jobs:
       SHOPIFY_TOKEN_HHG: ${{ secrets.SHOPIFY_TOKEN_HHG }}
       GRAPHQL_URL_PSP: ${{ secrets.GRAPHQL_URL_PSP }}
       SHOPIFY_TOKEN_PSP: ${{ secrets.SHOPIFY_TOKEN_PSP }}
+      FP_AUTH_TOKEN: ${{ secrets.FP_AUTH_TOKEN }}
 
     steps:
       - uses: actions/checkout@v4
