@@ -3,7 +3,11 @@ const axios = require('axios');
 const { getLocationId, paginateProductsByVendor, updateInventory } = require('./shopifyFunctions');
 
 async function get4PromoProducts() {
-    const response = await axios.get('https://4promotional.net:9090/WsEstrategia/inventario');
+    const response = await axios.get('https://api-external-clients.4promotional.net/api/products', {
+        headers: {
+            'Authorization': `Bearer ${process.env.FP_AUTH_TOKEN}`
+        },
+    });
     return response.data;
 }
 
@@ -35,7 +39,7 @@ async function updateProducts(store, products) {
 
             for (const variant of shopifyVariants) {
                 const activeVariant = activeVariantBySKU.get(variant.sku);
-                const targetInventory = activeVariant ? activeVariant.inventario : 0;
+                const targetInventory = activeVariant ? parseInt(activeVariant.inventario, 10) : 0;
                 const label = activeVariant ? 'Variante existente' : 'Variante faltante';
                 console.log(`[${store.name}] ${label}: ${shopifyProduct.title} ${variant.title}, Prev ${variant.inventoryQuantity} Now ${targetInventory}`);
 
@@ -56,7 +60,7 @@ async function updateProducts(store, products) {
             }
             // break;
         } catch (error) {
-            console.error(`[${store.name}] Error actualizando ${product.nombre_articulo} ${product.id_articulo}:`, error);
+            console.error(`[${store.name}] Error actualizando ${product.nombre_artd} ${product.id_articulo}:`, error);
         }
     }
 }
